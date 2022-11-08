@@ -72,6 +72,17 @@ class UserServices {
     static async createUser(newUser) {
         try {
             const result = await Users.create(newUser)
+            return result
+        } catch (error) {
+            throw error
+        }
+    }
+    static async updateUser(updateUsers, id) {
+        try {
+            const result = await Users.update(updateUsers, {
+                where: {id}
+            });
+            return result
         } catch (error) {
             throw error
         }
