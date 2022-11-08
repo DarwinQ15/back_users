@@ -1,5 +1,5 @@
 //Importamos los modelos
-const Task = require('../models/tasks.models');
+const Task = require('../models/tasks.models'); 
 
 class TaskServices {
     static async getAll(){

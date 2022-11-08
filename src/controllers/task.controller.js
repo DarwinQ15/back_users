@@ -25,7 +25,7 @@ const createTask = async (req, res) => {
         const newTask = req.body;
         console.log(newTask);
         const result = await TaskServices.createTasks(newTask);
-        res.status(200).json(result);
+        res.status(201).json(result);
     } catch (error) {
         console.log(error);
     }

@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const {getAllUsers, getById, getUserWithAddress, getUserWithTask } = require('../controllers/users.controller');
+const { Router, application } = require('express');
+const {getAllUsers, getById, getUserWithAddress, getUserWithTask, createUser } = require('../controllers/users.controller');
 
 const router = Router();
 
@@ -11,6 +11,8 @@ router.get('/users/:id', getById);
 
 router.get('/users/:id/address', getUserWithAddress);
 
-router.get('/users/:id/tasks', getUserWithTask)
+router.get('/users/:id/tasks', getUserWithTask);
+
+router.post('/users', createUser)
 
 module.exports = router;
