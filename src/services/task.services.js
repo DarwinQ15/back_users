@@ -1,5 +1,7 @@
 //Importamos los modelos
 const Task = require('../models/tasks.models'); 
+const TaskCategories = require('../models/taskcategories.models');
+const Categories = require('../models/categories.models');
 
 class TaskServices {
     static async getAll(){
@@ -14,10 +16,21 @@ class TaskServices {
     };
 
     //task por id
-    static async getTaskById(id) {
+    static async getTaskById(userId) {
         try {
-            const result = await Task.findByPk(id, {
-                attributes: ['id', 'title', 'description', 'is_complete', 'user_id']
+            const result = await Task.findAll({
+                where: {userId: userId},
+                attributes: ['id', 'title', 'description', 'is_complete'],
+                include: {
+                    model: TaskCategories,
+                    as: 'categories',
+                    attributes: ['categoryId'],
+                    include: {
+                        model: Categories,
+                        as: 'categories',
+                        attributes: ['name']
+                    }
+                }
             });
             return result
         } catch (error) {
@@ -28,10 +41,14 @@ class TaskServices {
     //crear tareas
 
     //POST
-    static async createTasks(newTask){
+    static async create (task, categories){
         try {
-            const result = await Task.create(newTask)
-            return result
+            const taskResult = await Task.create(task)
+            const { id } = taskResult;
+            categories.forEach(
+                async (category)=> await TaskCategories.create({categoryId: category, taskId: id})
+            );
+            return taskResult;
         } catch (error) {
             throw error
         }
@@ -39,12 +56,11 @@ class TaskServices {
 
     //actualizar tareas
 
-    static async updateTasks (taskBody, taskId) {
+    static async updateStatus (id) {
         try {
-            const result = await Task.update( taskBody, {
-                where: { taskId }
+            const result = await Task.update({isComplete: true}, {
+                where: { id }                
             });
-            console.log(result);
             return result
         } catch (error) {
             throw error
